@@ -66,6 +66,7 @@ generators as well as several baselines:
 
 Below are configuration parameters explained by sections:
 
+```
 * [learn]
 - lr            : learning rate of SGD.
 - lr_decay      : learning rate decay.
@@ -108,24 +109,21 @@ Below are knn/ngram specific parameters:
 * [ngram]
 - ngram         : the N of ngram
 - rho           : number of slots considered to partition the dataset
-
+```
 
 # Quick Start 
 
 To run ML training:
-
 ```
 python main.py -config config/sclstm.cfg -mode train
 ```
 
 To run generation:
-
 ```
 python main.py -config config/sclstm.cfg -mode test
 ```
 
 To run ngram/knn baselines:
-
 ```
 python main.py -config config/ngram.cfg -mode ngram
 python main.py -config config/knn.cfg   -mode knn
@@ -137,7 +135,6 @@ python main.py -config config/ngram.cfg -mode adapt
 ```
 
 Note : before you run anything, make sure the config vars are properly set.
-
 
 # Benchmark Results
 
