@@ -119,10 +119,12 @@ To run generation:
     python main.py -config config/sclstm.cfg -mode test
 
 To run ngram/knn baselines:
-    ```
-    python main.py -config config/ngram.cfg -mode ngram
-    python main.py -config config/knn.cfg   -mode knn
-    ```
+
+```
+python main.py -config config/ngram.cfg -mode ngram
+python main.py -config config/knn.cfg   -mode knn
+```
+    
 
 To run training/adaptation/DT training/fine-tuning on an existing model
     python main.py -config config/ngram.cfg -mode adapt
