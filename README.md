@@ -1,8 +1,5 @@
-########################################################################
-########################################################################
-##  Copyright Tsung-Hsien Wen, Cambridge Dialogue Systems Group, 2016 ##
-########################################################################
-########################################################################
+# RNNLG
+
 
 RNNLG is an open source benchmark toolkit for Natural Language Generati-
 on (NLG) in spoken dialogue system application domains. It is released 
