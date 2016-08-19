@@ -11,7 +11,7 @@ The toolkit encloses the following four benchmark datasets:
 * data/original/tv/         : Television sale/search
 ```
 
-, and the counterfeited datasets produced in [Wen et al, 2016]:
+, and the counterfeited datasets produced in **Wen et al, 2016**:
 ```
 * data/counterfeit/r2h/     : Restaurant to hotel counterfeited dataset
 * data/counterfeit/h2r/     : Hotel to restaurant counterfeited dataset
@@ -34,14 +34,14 @@ Each example in the file is represented as a 3-element list:
 * [MR/Dialogue Act, Human Authored Response, HDC baseline]
 ```
 For more detail of how the datasets were collected, please refer to 
-Wen et al, 2015b and Wen et al, 2016.
+**Wen et al, 2015b** and **Wen et al, 2016**.
 
 
 # Toolkit Overview 
 
-The toolkit is implmented in Python. The training of the neural networks 
-is implemented in Theano library, while the decoding is implemented in 
-Numpy for runtime efficiency. The toolkit supports several RNN-based 
+The toolkit is implmented in **Python**. The training of the neural networks 
+is implemented in **Theano** library, while the decoding is implemented in 
+**Numpy** for runtime efficiency. The toolkit supports several RNN-based 
 generators as well as several baselines:
 
 ```
