@@ -4,41 +4,47 @@ RNNLG is an open source benchmark toolkit for Natural Language Generation (NLG) 
 
 # Benchmark Datasets 
 The toolkit encloses the following four benchmark datasets:
+```
 * data/original/restaurant/ : San Francisco restaurant search
 * data/original/hotel/      : San Francisco hotel search
 * data/original/laptop/     : Laptop sale/search
 * data/original/tv/         : Television sale/search
+```
 
 , and the counterfeited datasets produced in [Wen et al, 2016]:
+```
 * data/counterfeit/r2h/     : Restaurant to hotel counterfeited dataset
 * data/counterfeit/h2r/     : Hotel to restaurant counterfeited dataset
 * data/counterfeit/l2t/     : Laptop to TV  counterfeited dataset
 * data/counterfeit/t2l/     : TV to laptop  counterfeited dataset
 * data/counterfeit/r+h2l+t/ : Restaurant/hotel to laptop/TV ...
 * data/counterfeit/l+t2r+h/ : Laptop/TV to restaurant/hotel ...
+```
 
 , as well as some union of domains:
+```
 * data/union/r+h/
 * data/union/l+t/
 * data/union/r+h+l/
 * data/union/r+h+l+t/
+```
 
 Each example in the file is represented as a 3-element list:
+```
 * [MR/Dialogue Act, Human Authored Response, HDC baseline]
-
+```
 For more detail of how the datasets were collected, please refer to 
 Wen et al, 2015b and Wen et al, 2016.
 
 
-########################################################################
-####### Toolkit Overview ###############################################
-########################################################################
+# Toolkit Overview 
 
 The toolkit is implmented in Python. The training of the neural networks 
 is implemented in Theano library, while the decoding is implemented in 
 Numpy for runtime efficiency. The toolkit supports several RNN-based 
 generators as well as several baselines:
 
+```
 * Model
 - (knn) kNN generator:
     k-nearest neighbor example-based generator, based on MR similarty.
@@ -58,11 +64,9 @@ generators as well as several baselines:
 * Decoding Strategy
 - (beam) Beam search
 - (sample) Random sampling
+```
 
-
-########################################################################
-####### Configuration Parameters #######################################
-########################################################################
+# Configuration Parameters 
 
 Below are configuration parameters explained by sections:
 
