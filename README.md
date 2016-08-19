@@ -113,10 +113,16 @@ Below are knn/ngram specific parameters:
 # Quick Start 
 
 To run ML training:
-    python main.py -config config/sclstm.cfg -mode train
+
+```
+python main.py -config config/sclstm.cfg -mode train
+```
 
 To run generation:
-    python main.py -config config/sclstm.cfg -mode test
+
+```
+python main.py -config config/sclstm.cfg -mode test
+```
 
 To run ngram/knn baselines:
 
@@ -125,10 +131,11 @@ python main.py -config config/ngram.cfg -mode ngram
 python main.py -config config/knn.cfg   -mode knn
 ```
     
-
 To run training/adaptation/DT training/fine-tuning on an existing model
-    python main.py -config config/ngram.cfg -mode adapt
-    
+```
+python main.py -config config/ngram.cfg -mode adapt
+```
+
 Note : before you run anything, make sure the config vars are properly set.
 
 
