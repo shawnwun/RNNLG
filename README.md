@@ -178,13 +178,13 @@ thwsjy15,
        location={Lisbon, Portugal}
 }
 
-[Wen et al, 2015c]:
-@article{wenmlsds16,
-       Author = {Wen, Tsung-Hsien and Ga{\v{s}}i\'c, Milica and Mrk{\v{s}}i\'c, Nikola and M. Rojas-Barahona, Lina and Su, Pei-Hao and Vandyke, David and Young, Steve},
-       title={Toward Multi-domain Language Generation using Recurrent Neural Networks},
-       journal={NIPS Workshop on Machine Learning for Spoken Language Understanding and Interaction},
-       year={2015},
-       month={Dec},
-       location={Montreal, Canada}
-}
+    [Wen et al, 2015c]:
+    @article{wenmlsds16,
+        Author = {Wen, Tsung-Hsien and Ga{\v{s}}i\'c, Milica and Mrk{\v{s}}i\'c, Nikola and M. Rojas-Barahona, Lina and Su, Pei-Hao and Vandyke, David and Young, Steve},
+        title={Toward Multi-domain Language Generation using Recurrent Neural Networks},
+        journal={NIPS Workshop on Machine Learning for Spoken Language Understanding and Interaction},
+        year={2015},
+        month={Dec},
+        location={Montreal, Canada}
+    }
 
