@@ -1,0 +1,10 @@
+config/batch/*
+log/batch/*
+scp/batch/*
+model/batch/*
+python/*
+python2/*
+*.sh.e*
+*.sh.o*
+*.pyc
+*.model

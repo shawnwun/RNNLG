@@ -1,0 +1,6 @@
+{   
+    "none"  :   ["none"],
+    "yes"   :   ["true","yes"],
+    "no"    :   ["false","no"],
+    "dontcare"  :   ["dontcare","dont_care"]
+}
