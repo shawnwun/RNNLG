@@ -110,50 +110,42 @@ Below are knn/ngram specific parameters:
 - rho           : number of slots considered to partition the dataset
 
 
-########################################################################
-####### Quick Start ####################################################
-########################################################################
+# Quick Start 
 
-* To run ML training:
+To run ML training:
     python main.py -config config/sclstm.cfg -mode train
 
-* To run generation:
+To run generation:
     python main.py -config config/sclstm.cfg -mode test
 
-* To run ngram/knn baselines:
+To run ngram/knn baselines:
     python main.py -config config/ngram.cfg -mode ngram
     python main.py -config config/knn.cfg   -mode knn
 
-* To run training/adaptation/DT training/fine-tuning on an existing model
+To run training/adaptation/DT training/fine-tuning on an existing model
     python main.py -config config/ngram.cfg -mode adapt
-
-
+    
 Note : before you run anything, make sure the config vars are properly set.
 
 
-########################################################################
-####### Benchmark Results ##############################################
-########################################################################
+# Benchmark Results
 
 ![Benchmark](https://raw.githubusercontent.com/shawnwun/RNNLG/master/benchmark.png)
 
-########################################################################
-####### References #####################################################
-########################################################################
-
+# References 
 If you use any source codes or datasets included in this toolkit in your
 work, please cite the corresponding papers. The bibtex are listed below:
 
-[Wen et al, 2016]:
-@inproceedings{wenmultinlg16,
-       Author = {Wen, Tsung-Hsien and Ga{\v{s}}i\'c, Milica and Mrk{\v{s}}i\'c, Nikola and M. Rojas-Barahona, Lina and Su, Pei-Hao and Vandyke, David and Young, Steve},
-       title={Multi-domain Neural Network Language Generation for Spoken Dialogue Systems},
-       booktitle={Proceedings of the 2016 Conference on North American Chapter of the Association for Computational Linguistics (NAACL)},
-       year={2016},
-       month={June},
-       publisher={Association for Computational Linguistics},
-       location={San Diego, USA}
-}
+    [Wen et al, 2016]:
+        @inproceedings{wenmultinlg16,
+        Author = {Wen, Tsung-Hsien and Ga{\v{s}}i\'c, Milica and Mrk{\v{s}}i\'c, Nikola and M. Rojas-Barahona, Lina and Su, Pei-Hao and Vandyke, David and Young, Steve},
+        title={Multi-domain Neural Network Language Generation for Spoken Dialogue Systems},
+        booktitle={Proceedings of the 2016 Conference on North American Chapter of the Association for Computational Linguistics (NAACL)},
+        year={2016},
+        month={June},
+        publisher={Association for Computational Linguistics},
+        location={San Diego, USA}
+    }
 
     [Wen et al, 2015a]:
     @INPROCEEDINGS{
