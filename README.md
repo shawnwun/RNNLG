@@ -155,28 +155,28 @@ work, please cite the corresponding papers. The bibtex are listed below:
        location={San Diego, USA}
 }
 
-[Wen et al, 2015a]:
-@INPROCEEDINGS{
-thwsjy15,
-   Author = {Wen, Tsung-Hsien and Ga{\v{s}}i\'c, Milica and Kim, Dongho and Mrk{\v{s}}i\'c, Nikola and Su, Pei-Hao and Vandyke, David and Young, Steve},
-   Title = {{Stochastic Language Generation in Dialogue using Recurrent Neural Networks with Convolutional Sentence Reranking}},
-   Year = {2015},
-   month={September},
-   booktitle={Proceedings of the 16th Annual Meeting of the Special Interest Group on Discourse and Dialogue (SIGDIAL)},
-   publisher={Association for Computational Linguistics},
-   location={Prague, Czech Republic}
-}
+    [Wen et al, 2015a]:
+    @INPROCEEDINGS{
+    thwsjy15,
+        Author = {Wen, Tsung-Hsien and Ga{\v{s}}i\'c, Milica and Kim, Dongho and Mrk{\v{s}}i\'c, Nikola and Su, Pei-Hao and Vandyke, David and Young, Steve},
+        Title = {{Stochastic Language Generation in Dialogue using Recurrent Neural Networks with Convolutional Sentence Reranking}},
+        Year = {2015},
+        month={September},
+        booktitle={Proceedings of the 16th Annual Meeting of the Special Interest Group on Discourse and Dialogue (SIGDIAL)},
+        publisher={Association for Computational Linguistics},
+        location={Prague, Czech Republic}
+    }
 
-[Wen et al, 2015b]:
-@inproceedings{wensclstm15,
-       Author = {Wen, Tsung-Hsien and Ga{\v{s}}i\'c, Milica and Mrk{\v{s}}i\'c, Nikola and Su, Pei-Hao and Vandyke, David and Young, Steve},
-       title={Semantically Conditioned LSTM-based Natural Language Generation for Spoken Dialogue Systems},
-       booktitle={Proceedings of the 2015 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
-       year={2015},
-       month={September},
-       publisher={Association for Computational Linguistics},
-       location={Lisbon, Portugal}
-}
+    [Wen et al, 2015b]:
+    @inproceedings{wensclstm15,
+        Author = {Wen, Tsung-Hsien and Ga{\v{s}}i\'c, Milica and Mrk{\v{s}}i\'c, Nikola and Su, Pei-Hao and Vandyke, David and Young, Steve},
+        title={Semantically Conditioned LSTM-based Natural Language Generation for Spoken Dialogue Systems},
+        booktitle={Proceedings of the 2015 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+        year={2015},
+        month={September},
+        publisher={Association for Computational Linguistics},
+        location={Lisbon, Portugal}
+    }
 
     [Wen et al, 2015c]:
     @article{wenmlsds16,
