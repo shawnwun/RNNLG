@@ -2,6 +2,13 @@
 
 RNNLG is an open source benchmark toolkit for **Natural Language Generation** (NLG) in spoken dialogue system application domains. It is released by **Tsung-Hsien (Shawn) Wen** from **Cambridge Dialogue Systems Group** under **Apache License 2.0**.
 
+# Requirement
+You need to have the following package to run the program:
+```
+* Theano 0.8.2 and accompanying packages such as numpy, scipy ...
+* NLTK 3.0.0
+```
+
 # Benchmark Datasets 
 The toolkit encloses the following four benchmark datasets:
 ```
@@ -11,7 +18,7 @@ The toolkit encloses the following four benchmark datasets:
 * data/original/tv/         : Television sale/search
 ```
 
-, and the counterfeited datasets produced in **Wen et al, 2016**:
+and the counterfeited datasets produced in **Wen et al, 2016**:
 ```
 * data/counterfeit/r2h/     : Restaurant to hotel counterfeited dataset
 * data/counterfeit/h2r/     : Hotel to restaurant counterfeited dataset
@@ -21,7 +28,7 @@ The toolkit encloses the following four benchmark datasets:
 * data/counterfeit/l+t2r+h/ : Laptop/TV to restaurant/hotel ...
 ```
 
-, as well as some union of domains:
+as well as some union of domains:
 ```
 * data/union/r+h/
 * data/union/l+t/
