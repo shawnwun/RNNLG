@@ -155,6 +155,10 @@ The following benchmark results were produced by training each neural network mo
 <img src="https://raw.githubusercontent.com/shawnwun/RNNLG/master/benchmark.png" alt="benchmark" width="600" height="600"/>
 
 
+# Bug Report
+
+If you have found any bugs in the code, please contact: thw28 at cam dot ac dot uk
+
 # References 
 If you use any source codes or datasets included in this toolkit in your
 work, please cite the corresponding papers. The bibtex are listed below:
