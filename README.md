@@ -142,7 +142,7 @@ python main.py -config config/knn.cfg   -mode knn
     
 To run training/adaptation/DT training/fine-tuning on an existing model
 ```
-python main.py -config config/ngram.cfg -mode adapt
+python main.py -config config/sclstm-DT.cfg -mode adapt
 ```
 
 Note : before you run anything, make sure the config vars are properly set.
