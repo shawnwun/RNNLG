@@ -88,11 +88,11 @@ class NNGenerator(object):
                 inputs= [a,sv,s,v, w_idxes, cutoff_f, cutoff_b, lr, reg],
                 outputs=-self.cost,
                 updates=updates,
-                on_unused_input='warn') 
+                on_unused_input='ignore') 
         self.test  = theano.function(
                 inputs= [a,sv,s,v, w_idxes, cutoff_f, cutoff_b],
                 outputs=-self.cost,
-                on_unused_input='warn')
+                on_unused_input='ignore')
         
         ###################### DT Training #####################
         # expected objective

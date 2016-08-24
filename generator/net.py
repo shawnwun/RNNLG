@@ -155,6 +155,7 @@ class Model(object):
         if self.debug:
             print '\t\tnumber of parameters : %8d' % \
                     self.model.numOfParams()
+            print '\tthis may take up to several minutes ...'
 
     #################################################################
     ####################### Training ################################
