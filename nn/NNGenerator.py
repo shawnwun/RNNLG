@@ -115,13 +115,13 @@ class NNGenerator(object):
                     bleus, errs, gamma, lr, reg],
                 outputs=[self.obj,xBLEU,xERR,senp],
                 updates=obj_updates,
-                on_unused_input='warn',
+                on_unused_input='ignore',
                 allow_input_downcast=True)
         self.testObj = theano.function(
                 inputs= [a,sv,s,v, w_idxes, cutoff_f, cutoff_b,
                     bleus,errs,gamma],
                 outputs=[self.obj,xBLEU,xERR],
-                on_unused_input='warn',
+                on_unused_input='ignore',
                 allow_input_downcast=True)
 
     def gen(self,a,sv,s,v):
