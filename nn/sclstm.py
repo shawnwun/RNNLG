@@ -6,7 +6,13 @@
 import operator
 import numpy as np
 import theano.tensor as T
-from Queue import PriorityQueue
+from future.utils import iteritems
+try:
+
+    from Queue import PriorityQueue
+except ImportError:
+
+    from queue import PriorityQueue
 from utils.mathUtil import softmax, sigmoid, tanh
 
 from basic  import *
@@ -60,7 +66,7 @@ class sclstm(BaseRLG):
     
     def setWordVec(self,word2vec):
         self.Wemb_np = self.Wemb.get_value()
-        for w,v in word2vec.iteritems():
+        for w, v in iteritems(word2vec):
             self.Wemb_np[w,:] = v
         self.Wemb.set_value(self.Wemb_np)
 

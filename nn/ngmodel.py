@@ -5,9 +5,13 @@
 ######################################################################
 import operator
 import numpy as np
-from Queue import PriorityQueue
-from utils.mathUtil import softmax, sigmoid, tanh
-from copy import deepcopy
+from future.utils import iteritems
+try:
+
+    from Queue import PriorityQueue
+except ImportError:
+
+    from queue import PriorityQueue
 from basic import *
 
 class NGModel(object):
@@ -58,14 +62,14 @@ class NGModel(object):
 
         # normalise everything into log prob
         sum1 = sum([cnt for cnt in self.model[1].values()])
-        for w,cnt in self.model[1].iteritems():
+        for w, cnt in iteritems(self.model[1]):
             self.model[1][w] = cnt/sum1
         self.model[1] = sorted(self.model[1].items(),
                 key=operator.itemgetter(1),reverse=True)
         for n in range(2,self.n+1):
-            for context,wdct in self.model[n].iteritems():
+            for context, wdct in iteritems(self.model[n]):
                 sumc = sum([cnt for cnt in wdct.values()])
-                for w,cnt in wdct.iteritems():
+                for w, cnt in iteritems(wdct):
                     self.model[n][context][w] = cnt/sumc
                 self.model[n][context] = sorted(
                         self.model[n][context].items(),

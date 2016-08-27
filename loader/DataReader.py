@@ -3,19 +3,15 @@
 #  Copyright Tsung-Hsien Wen, Cambridge Dialogue Systems Group, 2016 #
 ######################################################################
 ######################################################################
-import os
 import re
-import sys
-import json
-import math
-import operator
 import random
-import itertools
 import numpy as np
 
-from FeatParser import *
-from DataLexicaliser import *
-from utils.nlp import *
+from builtins import input as raw_input
+from future.utils import iteritems
+
+from .FeatParser import *
+from .DataLexicaliser import *
 
 
 class DataReader(object):
@@ -113,8 +109,8 @@ class DataReader(object):
                         if len(xvec[j])>max_leng[j]:
                             max_leng[j] = len(xvec[j])
                 else: # TODO:DT training, 1 da/multiple sents per example
-                    print a,sv
-                    print sent
+                    print(a, sv)
+                    print(sent)
                     raw_input()
         # padding to have the same sent length
         lengs = [[],[],[],[],[]]
@@ -175,14 +171,14 @@ class DataReader(object):
             self.dfs[i+1] = self.dfs[i] + self.dfs[i+1]
 
     def _printStats(self):
-        print '==============='
-        print 'Data statistics'
-        print '==============='
-        print 'Train: %d' % len(self.data['train'] )
-        print 'Valid: %d' % len(self.data['valid'] )
-        print 'Test : %d' % len(self.data['test']  )
-        print 'Feat : %d' % len(self.cardinality)
-        print '==============='
+        print('===============')
+        print('Data statistics')
+        print('===============')
+        print('Train: %d' % len(self.data['train'] ))
+        print('Valid: %d' % len(self.data['valid'] ))
+        print('Test : %d' % len(self.data['test']  ))
+        print('Feat : %d' % len(self.cardinality))
+        print('===============')
 
     def _testDelexicalisation(self):
         for data in self.data['train']+self.data['valid']+self.data['test']:
@@ -273,7 +269,7 @@ class DataReader(object):
     def tokenMap2Indexes(self):
         maxleng = 0
         idxmap = [[] for x in range(len(self.vocab))]
-        for k,v in self.feat2token.iteritems():
+        for k,v in iteritems(self.feat2token):
             try:
                 idxmap[self.vocab.index(v)].append(self.cardinality.index(k)-self.dfs[1])
                 if len(idxmap[self.vocab.index(v)])>maxleng:

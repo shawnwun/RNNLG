@@ -3,15 +3,12 @@
 #  Copyright Tsung-Hsien Wen, Cambridge Dialogue Systems Group, 2016 #
 ######################################################################
 ######################################################################
-import os
 import json
-import sys
 import math
-import operator
 
+from future.utils import iteritems
 from collections import Counter
 from nltk.util import ngrams
-#from nltk.align.bleu import BLEU
 
 
 class ERRScorer():
@@ -48,7 +45,7 @@ class ERRScorer():
         # exact match for categorical slots
         caty_slot_error = 0
         # fo each slot - token pair in the detect pair dict
-        for s,tok in self.detectPairs['general'].iteritems(): 
+        for s,tok in iteritems(self.detectPairs['general']):
             # token compare to
             comparetos = ['sv.'+s+'._1','sv.'+s+'._2','sv.'+s+'._3']
             # count feature count in da feature
@@ -68,7 +65,7 @@ class ERRScorer():
         # key word match for binary slots, only an approximation
         bnay_slot_error = 0
         # for each binary slot
-        for s,toks in self.detectPairs['binary'].iteritems():
+        for s,toks in iteritems(self.detectPairs['binary']):
             # tokens compare to
             comparetos = ['sv.'+s+'.yes','sv.'+s+'.no',
                     'sv.'+s+'.dontcare','sv.'+s+'.none']
