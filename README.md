@@ -149,7 +149,7 @@ Note : before you run anything, make sure the config vars are properly set.
 
 # Benchmark Results
 
-The following benchmark results were produced by training each neural network model on 5 different random seeds and selected the model with best validation BLEU score. Both the testing and validating set performance were shown:
+The following benchmark results were produced by training each neural network model on 5 different random seeds (1-5) and selected models with the best validation BLEU score. Both the testing and validating set performance are shown:
 
 
 <img src="https://raw.githubusercontent.com/shawnwun/RNNLG/master/benchmark.png" alt="benchmark" width="600" height="600"/>
