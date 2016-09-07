@@ -1,6 +1,6 @@
 # RNNLG
 
-RNNLG is an open source benchmark toolkit for **Natural Language Generation** (NLG) in spoken dialogue system application domains. It is released by **Tsung-Hsien (Shawn) Wen** from **Cambridge Dialogue Systems Group** under **Apache License 2.0**.
+RNNLG is an open source benchmark toolkit for **Natural Language Generation** (NLG) in spoken dialogue system application domains. It is released by **Tsung-Hsien (Shawn) Wen** from **Cambridge Dialogue Systems Group** under **Apache License 2.0**. If you are interested in learning the techniques behind this toolkit, I recently had a tutorial at INLG conference. The link of the slides is here: http://mi.eng.cam.ac.uk/~thw28/talks/DL4NLG_20160906.pdf.
 
 # Requirement
 You need to have the following package to run the program:
