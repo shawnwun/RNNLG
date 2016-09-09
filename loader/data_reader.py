@@ -9,7 +9,7 @@ import numpy as np
 import random
 import re
 
-from .FeatParser import *
+from .feat_parser import *
 from .data_lexicaliser import *
 
 file = open
@@ -146,11 +146,11 @@ class DataReader(object):
         return a, sv, s, v, words, dact, base, b_size, lengs
 
     def delexicalise(self, sent, dact):
-        feat = self.formatter.parse(dact, keepValues=True)
+        feat = self.formatter.parse(dact, keep_values=True)
         return self.lexicaliser.delexicalise(sent, feat['s2v'])
 
     def lexicalise(self, sent, dact):
-        feat = self.formatter.parse(dact, keepValues=True)
+        feat = self.formatter.parse(dact, keep_values=True)
         return self.lexicaliser.lexicalise(sent, feat['s2v'])
 
     def format(self, dact):
