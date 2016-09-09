@@ -10,7 +10,7 @@ import time
 from math import log10
 
 from loader.DataReader import *
-from loader.GentScorer import *
+from loader.generation_scorer import *
 from nn.NNGenerator import *
 
 try:
@@ -584,4 +584,4 @@ class Model(object):
                                  self.vocabfile, self.trainfile, self.validfile, self.testfile,
                                  self.percentage, self.verbose, lexCutoff=4)
         # setting generation scorer
-        self.gentscorer = GentScorer(self.detectpairs)
+        self.gentscorer = GenerationScorer(self.detectpairs)

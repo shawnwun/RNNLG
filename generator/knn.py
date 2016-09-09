@@ -10,7 +10,7 @@ from math import sqrt
 from copy import deepcopy
 
 from loader.DataReader import *
-from loader.GentScorer import *
+from loader.generation_scorer import *
 
 try:
 
@@ -147,4 +147,4 @@ class KNN(object):
                                  self.vocabfile, self.trainfile, self.validfile, self.testfile,
                                  self.percentage, self.verbose, lexCutoff=4)
         # setting generation scorer
-        self.gentscorer = GentScorer(self.detectpairs)
+        self.gentscorer = GenerationScorer(self.detectpairs)

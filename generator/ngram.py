@@ -10,7 +10,7 @@ from math import sqrt
 from future.utils import iteritems
 
 from loader.DataReader import *
-from loader.GentScorer import *
+from loader.generation_scorer import *
 from nn.ngmodel import *
 
 try:
@@ -187,4 +187,4 @@ class Ngram(object):
                                  self.vocabfile, self.trainfile, self.validfile, self.testfile,
                                  self.percentage, self.verbose, lexCutoff=4)
         # setting generation scorer
-        self.gentscorer = GentScorer(self.detectpairs)
+        self.gentscorer = GenerationScorer(self.detectpairs)

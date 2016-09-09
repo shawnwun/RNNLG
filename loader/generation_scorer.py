@@ -96,7 +96,7 @@ class ERRScorer():
 
 class BLEUScorer(object):
     """
-    BLEU score calculator via GentScorer interface.
+    BLEU score calculator via GenerationScorer interface.
 
     Calculates the BLEU-4 by taking the entire corpus in.
     Calculates based multiple candidates against multiple references.
@@ -238,7 +238,7 @@ class BLEUScorer(object):
         return bleu_hyp
 
 
-class GentScorer(object):
+class GenerationScorer(object):
     """
     Scorer to collect all scorers.
 
