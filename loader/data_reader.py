@@ -11,6 +11,7 @@ import re
 
 from .feat_parser import *
 from .data_lexicaliser import *
+from utils.nlp import *
 
 file = open
 
