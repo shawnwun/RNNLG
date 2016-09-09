@@ -140,7 +140,7 @@ class NNGenerator(object):
             elif self.gentype=='hlstm':
                 return self.generator.sample(a,sv)
 
-    def setWordVec(self,word2vec):
+    def set_word_vec(self, word2vec):
         self.generator.setWordVec(word2vec)
 
     def setParams(self,params):
@@ -153,6 +153,6 @@ class NNGenerator(object):
     def numOfParams(self):
         return sum([p.get_value().size for p in self.params])
 
-    def loadConverseParams(self):
+    def load_converse_params(self):
         self.generator.loadConverseParams()
 

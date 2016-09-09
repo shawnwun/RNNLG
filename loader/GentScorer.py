@@ -241,16 +241,16 @@ class GentScorer(object):
         self.errscorer = ERRScorer(detectfile)
         self.bleuscorer= BLEUScorer()
 
-    def scoreERR( self,a,feat,gen):
+    def score_error(self, a, feat, gen):
         return self.errscorer.score(a,feat,gen)
         
     def countSlots(self,dataset,reader):
         return self.errscorer.countSlots(dataset,reader)
 
-    def scoreBLEU(self,parallel_corpus):
+    def score_bleu(self, parallel_corpus):
         return self.bleuscorer.score(parallel_corpus)
 
-    def scoreSBLEU(self,parallel_corpus):
+    def score_sbleu(self, parallel_corpus):
         return self.bleuscorer.sentence_bleu_4(parallel_corpus)
 
 
