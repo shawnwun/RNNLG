@@ -507,13 +507,14 @@ class Model(object):
         if self.debug:
             print('saving net to file ... ')
         self.updateNumpyParams()
+        locals_ = locals()
         bundle={
-            'learn' :dict( [(name,eval(name)) for name in self.learn_vars]  ),
-            'data'  :dict( [(name,eval(name)) for name in self.data_vars]   ),
-            'gen'   :dict( [(name,eval(name)) for name in self.gen_vars]    ),
-            'model' :dict( [(name,eval(name)) for name in self.model_vars]  ),
-            'mode'  :dict( [(name,eval(name)) for name in self.mode_vars]   ),
-            'params':dict( [(name,eval(name)) for name in self.params_vars] )
+            'learn' :dict( [(name,eval(name, globals(), locals_)) for name in self.learn_vars]  ),
+            'data'  :dict( [(name,eval(name, globals(), locals_)) for name in self.data_vars]   ),
+            'gen'   :dict( [(name,eval(name, globals(), locals_)) for name in self.gen_vars]    ),
+            'model' :dict( [(name,eval(name, globals(), locals_)) for name in self.model_vars]  ),
+            'mode'  :dict( [(name,eval(name, globals(), locals_)) for name in self.mode_vars]   ),
+            'params':dict( [(name,eval(name, globals(), locals_)) for name in self.params_vars] )
         }
         pk.dump(bundle, open(self.modelfile, 'wb'))
 
