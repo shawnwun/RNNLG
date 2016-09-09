@@ -11,19 +11,19 @@ from builtins import input as raw_input
 from future.utils import iteritems
 
 from .FeatParser import *
-from .DataLexicaliser import *
+from .data_lexicaliser import *
 from utils.nlp import *
 
 file = open
 
 class DataReader(object):
-    def __init__(self, seed, domain, obj, 
+    def __init__(self, seed, domain, obj,
             vocabfile, trainfile, validfile, testfile,
             percentage=1.0, verbose=0, lexCutoff=4):
 
         self.percentage = percentage # percentage of data used
         # container for data
-        self.data   = {'train':[],'valid':[],'test':[]} 
+        self.data   = {'train':[],'valid':[],'test':[]}
         self.mode   = 'train'     # mode  for accessing data
         self.index  = 0          # index for accessing data
         self.obj    = obj
@@ -31,32 +31,32 @@ class DataReader(object):
         # load vocab from file
         self._loadVocab(vocabfile)
         self._loadTokenMap()
-        
+
         ## set input feature cardinality
         self._setCardinality()
-       
+
         ## init formatter/lexicaliser
         self.formatter      = SoftDActFormatter()
         self.lexicaliser    = ExactMatchDataLexicaliser()
         #self.hardformatter  = HardDActFormatter()
-        
+
         ## for lexicalising SLOT_TYPE
         self.lexicaliser.typetoken = domain
-        
+
         # initialise dataset
         self._setupData(trainfile,validfile,testfile)
         #self._testDelexicalisation()
 
         # obtain pos tags
         #self.obtainTags()
-        
+
         if verbose : self._printStats()
-      
+
     def readall(self,mode='train',processed=False):
         alldata = []
         for feat, dact, sent, base in self.data[mode]:
             a,sv,s,v = self.genFeatVec(feat,self.cardinality,self.dfs)
-            alldata.append([a,sv,s,v,sent,dact,base]) 
+            alldata.append([a,sv,s,v,sent,dact,base])
         return alldata
 
     def read(self,mode='train',batch=1):
@@ -73,7 +73,7 @@ class DataReader(object):
             # shuffle data except for testing 
             if mode!='test' : random.shuffle(self.data[mode])
             return data
-        
+
         # reading a batch
         start = self.index
         end   = self.index+batch \
@@ -153,7 +153,7 @@ class DataReader(object):
 
     def format(self,dact):
         return self.formatter.format(dact)
-    
+
     def _setCardinality(self):
 
         self.cardinality = []
@@ -188,7 +188,7 @@ class DataReader(object):
             self.lexicalise(self.delexicalise(sent,dact),dact)
 
     def _setupData(self,trainfile,validfile,testfile):
-        
+
         # load data from file
         train_group = True if self.obj=='dt' else False
         self.data['train'] = self._loadData(trainfile,train_group)
@@ -201,24 +201,24 @@ class DataReader(object):
                 [:int(self.percentage*len(self.data['valid']))]
 
     def _loadData(self,filename,group=True,multiref=False):
-        
+
         fin = file(filename)
         # remove comment lines
         for i in range(5):
             fin.readline()
         data = json.load(fin)
         fin.close()
-            
+
         container = []
         for dact,sent,base in data:
             # word tokens
-            sent = self.delexicalise( 
+            sent = self.delexicalise(
                     normalize(re.sub(' [\.\?\!]$','',sent)),dact)
             base = self.delexicalise(
                     normalize(re.sub(' [\.\?\!]$','',base)),dact)
             feat = self.formatter.format(dact)
             container.append( [feat,dact,sent,base] )
-        
+
         # grouping several sentences w/ the same dialogue act
         # for testing set, or DT on train/valid 
         if group or multiref:
@@ -237,7 +237,7 @@ class DataReader(object):
                 for feat,bundle in a2ref.items():
                     reordered_container.append([feat,
                         bundle[0],bundle[1],bundle[2]])
-                return reordered_container 
+                return reordered_container
             # return examples w/ multiple references
             if multiref:
                 reordered_container = []
@@ -248,9 +248,9 @@ class DataReader(object):
                 return reordered_container
         # if no grouping nor multiref, return directly
         else:   return container
-    
+
     def _loadVocab(self,vocabfile):
-        
+
         fin = file(vocabfile)
         self.vocab = []#['<unk>','</s>']
         for wrd in fin.readlines():
@@ -295,7 +295,7 @@ class DataReader(object):
             if word in vocab:
                 word2vec[vocab.index(word)] = np.array(vec)
         return word2vec
-    
+
     def genFeatVec(self,feat,cardinality,dfs):
         a,sv,s,v = [],[],[],[]
         a.append(cardinality.index('a.'+feat[0][-1]))
