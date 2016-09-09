@@ -9,7 +9,7 @@ from math import sqrt
 
 from copy import deepcopy
 
-from loader.DataReader import *
+from loader.data_reader import *
 from loader.generation_scorer import *
 
 try:
@@ -54,8 +54,8 @@ class KNN(object):
 
         ######## train KNN generator by grouping ########
         da2sents = {}
-        templates = self.reader.readall(mode='train') + \
-                    self.reader.readall(mode='valid')
+        templates = self.reader.read_all(mode='train') + \
+                    self.reader.read_all(mode='valid')
         for a, sv, s, v, sents, dact, base in templates:
             key = (tuple(a), tuple(sv))
             if da2sents.has_key(key):
@@ -145,6 +145,6 @@ class KNN(object):
         # initialise data reader
         self.reader = DataReader(self.seed, self.domain, self.obj,
                                  self.vocabfile, self.trainfile, self.validfile, self.testfile,
-                                 self.percentage, self.verbose, lexCutoff=4)
+                                 self.percentage, self.verbose, lex_cutoff=4)
         # setting generation scorer
         self.gentscorer = GenerationScorer(self.detectpairs)

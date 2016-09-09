@@ -31,7 +31,7 @@ class DataLexicaliser(object):
 class ExactMatchDataLexicaliser(DataLexicaliser):
     def __init__(self):
         DataLexicaliser.__init__(self)
-        self.typetoken = ''
+        self.type_token = ''
 
     def delexicalise(self, sent, jssv):
         # no slot values return directly
@@ -71,5 +71,5 @@ class ExactMatchDataLexicaliser(DataLexicaliser):
                 # raise ValueError('slot "SLOT_'+slot.upper()+'" does not exist !')
             else:
                 sent = (' ' + sent + ' ').replace(' SLOT_' + slot.upper() + ' ', ' ' + value + ' ', 1)[1:-1]
-        sent = (' ' + sent + ' ').replace(' SLOT_TYPE ', ' ' + self.typetoken + ' ')[1:-1]
+        sent = (' ' + sent + ' ').replace(' SLOT_TYPE ', ' ' + self.type_token + ' ')[1:-1]
         return sent

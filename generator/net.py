@@ -9,7 +9,7 @@ import pickle as pk
 import time
 from math import log10
 
-from loader.DataReader import *
+from loader.data_reader import *
 from loader.generation_scorer import *
 from nn.NNGenerator import *
 
@@ -144,10 +144,10 @@ class Model(object):
                                  self.beamwidth, self.overgen,
                                  self.di, self.dh, self.batch, self.reader.dfs,
                                  self.obj, self.mode, self.decode,
-                                 self.reader.tokenMap2Indexes())
+                                 self.reader.token_map_to_indices())
         # setting word vectors
         if self.wvecfile != 'None':
-            self.model.set_word_vec(self.reader.readVecFile(
+            self.model.set_word_vec(self.reader.read_vec_file(
                 self.wvecfile, self.reader.vocab))
         if self.debug:
             print('\t\tnumber of parameters : %8d' % self.model.numOfParams())
@@ -246,8 +246,8 @@ class Model(object):
             print('start network training with expected objective ...')
 
         # examples
-        train_examples = self.reader.readall(mode='train')
-        valid_examples = self.reader.readall(mode='valid')
+        train_examples = self.reader.read_all(mode='train')
+        valid_examples = self.reader.read_all(mode='valid')
 
         ######## training with early stopping ######### 
         epoch = 0
@@ -582,6 +582,6 @@ class Model(object):
         # initialise data reader
         self.reader = DataReader(self.seed, self.domain, self.obj,
                                  self.vocabfile, self.trainfile, self.validfile, self.testfile,
-                                 self.percentage, self.verbose, lexCutoff=4)
+                                 self.percentage, self.verbose, lex_cutoff=4)
         # setting generation scorer
         self.gentscorer = GenerationScorer(self.detectpairs)
