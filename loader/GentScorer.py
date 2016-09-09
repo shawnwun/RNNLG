@@ -6,106 +6,114 @@
 import json
 import math
 
-from future.utils import iteritems
 from collections import Counter
+from future.utils import iteritems
 from nltk.util import ngrams
 
 file = open
 
+
 class ERRScorer():
+    """
+    Scorer for calculating the slot errors
 
-    ## Scorer for calculating the slot errors
-    ## it scores utterances one by one
-    ## using two levels of matching 
-    ## 1. exact match for categorical values
-    ## 2. multiple keyword matching for binary values
-    ## 3. cannot deal with don't care and none values
-    def __init__(self,detectfile):
+    Scores utterances one by one using two levels of matching:
+    1. exact match for categorical values; and
+    2. multiple keyword matching for binary values.
 
-        self.detectPairs = []
+    NB: It cannot deal with don't care and none values.
+    """
+    def __init__(self, detectfile):
+
+        self.detect_pairs = []
         fin = file(detectfile)
-        self.detectPairs = json.load(fin)
+        self.detect_pairs = json.load(fin)
         fin.close()
 
-    def countSlots(self,dataset,reader):
+    def count_slots(self, dataset, reader):
         count = 0
         for t in dataset:
             feat = reader.formatter.format(t[0])[0]
             c = count
-            for s,v in feat:
+            for s, v in feat:
                 # skip type token
-                if s=='type':
+                if s == 'type':
                     continue
-                if v=='_' or v=='yes' or v=='none' or v=='no':
-                    count +=1
+                if v == '_' or v == 'yes' or v == 'none' or v == 'no':
+                    count += 1
         return count
 
-    def score(self,a,feat,gen):
+    def score(self, a, feat, gen):
         # total slots
         slot_count = 0
         # exact match for categorical slots
         caty_slot_error = 0
         # fo each slot - token pair in the detect pair dict
-        for s,tok in iteritems(self.detectPairs['general']):
+        for s, tok in iteritems(self.detect_pairs['general']):
             # token compare to
-            comparetos = ['sv.'+s+'._1','sv.'+s+'._2','sv.'+s+'._3']
+            comparetos = ['sv.' + s + '._1', 'sv.' + s + '._2', 'sv.' + s + '._3']
             # count feature count in da feature
             fcnt = 0
             for f in feat:
                 for compareto in comparetos:
-                    if compareto==f:  fcnt+=1
+                    if compareto == f:  fcnt += 1
             # count generated semantic tokens
             gcnt = gen.split().count(tok)
             # count the slot difference
-            #if fcnt!=gcnt:
+            # if fcnt!=gcnt:
             #    caty_slot_error += 1.0
-            caty_slot_error += abs(fcnt-gcnt)
+            caty_slot_error += abs(fcnt - gcnt)
             # accumulate slot count
             slot_count += fcnt
 
         # key word match for binary slots, only an approximation
         bnay_slot_error = 0
         # for each binary slot
-        for s,toks in iteritems(self.detectPairs['binary']):
+        for s, toks in iteritems(self.detect_pairs['binary']):
             # tokens compare to
-            comparetos = ['sv.'+s+'.yes','sv.'+s+'.no',
-                    'sv.'+s+'.dontcare','sv.'+s+'.none']
+            comparetos = ['sv.' + s + '.yes', 'sv.' + s + '.no',
+                          'sv.' + s + '.dontcare', 'sv.' + s + '.none']
             # count feature occurrence in da
             fcnt = 0
             for f in feat:
                 for compareto in comparetos:
-                    if compareto==f:  fcnt+=1
+                    if compareto == f:  fcnt += 1
             # count generated semantic tokens
-            gcnt = sum([gen.split().count(tok) for tok in toks]) 
+            gcnt = sum([gen.split().count(tok) for tok in toks])
             # count the slot difference
-            bnay_slot_error += abs(fcnt-gcnt)
+            bnay_slot_error += abs(fcnt - gcnt)
             # accumulate slot count
             slot_count += fcnt
         # total slot error
         total_slot_error = caty_slot_error + bnay_slot_error
         # when ?select/suggest act, only consider categorical errors
-        if a==[4] or a==[14]:
-            #return slot_count, caty_slot_error, caty_slot_error
-            return 0.0,0.0,0.0
+        if a == [4] or a == [14]:
+            # return slot_count, caty_slot_error, caty_slot_error
+            return 0.0, 0.0, 0.0
         else:
             return slot_count, total_slot_error, caty_slot_error
 
+
 class BLEUScorer(object):
-    ## BLEU score calculator via GentScorer interface
-    ## it calculates the BLEU-4 by taking the entire corpus in
-    ## Calulate based multiple candidates against multiple references
+    """
+    BLEU score calculator via GentScorer interface.
+
+    Calculates the BLEU-4 by taking the entire corpus in.
+    Calculates based multiple candidates against multiple references.
+    """
     def __init__(self):
         pass
-    def score(self,parallel_corpus):
-        
+
+    def score(self, parallel_corpus):
+
         # containers and parameters
-        r,c = 0,0
-        count = [0,0,0,0]
-        clip_count = [0,0,0,0]
-        weights=[0.25,0.25,0.25,0.25]
+        r, c = 0, 0
+        count = [0, 0, 0, 0]
+        clip_count = [0, 0, 0, 0]
+        weights = [0.25, 0.25, 0.25, 0.25]
 
         # accumulate ngram statistics
-        for hyps,refs in parallel_corpus:
+        for hyps, refs in parallel_corpus:
             hyps = [hyp.split() for hyp in hyps]
             refs = [ref.split() for ref in refs]
             # compute ngram counts by matching each hypothesis
@@ -113,7 +121,7 @@ class BLEUScorer(object):
                 # for each ngram
                 for i in range(4):
                     # accumulate hyp ngram counts
-                    hypcnts = Counter(ngrams(hyp,i+1))
+                    hypcnts = Counter(ngrams(hyp, i + 1))
                     cnt = sum(hypcnts.values())
                     count[i] += cnt
 
@@ -122,24 +130,24 @@ class BLEUScorer(object):
                     # compare to each reference
                     for ref in refs:
                         # get reference ngrams
-                        refcnts = Counter(ngrams(ref, i+1))
+                        refcnts = Counter(ngrams(ref, i + 1))
                         # for each ngram
                         for ng in hypcnts:
                             # clipped counts
-                            max_counts[ng] = max( max_counts.get(ng,0),refcnts[ng] )
+                            max_counts[ng] = max(max_counts.get(ng, 0), refcnts[ng])
                     # compute clipped counts by clipping the hyp count if necessary
-                    clipcnt = dict( (ng,min(count,max_counts[ng])) \
-                            for ng,count in hypcnts.items() )
+                    clipcnt = dict((ng, min(count, max_counts[ng])) \
+                                   for ng, count in hypcnts.items())
                     clip_count[i] += sum(clipcnt.values())
 
                 # accumulate r & c, find best match among all references
-                bestmatch = [1000,1000]
+                bestmatch = [1000, 1000]
                 for ref in refs:
-                    if bestmatch[0]==0: break
+                    if bestmatch[0] == 0: break
                     # length difference
-                    diff = abs(len(ref)-len(hyp))
+                    diff = abs(len(ref) - len(hyp))
                     # if the current diff less than stored one, change it
-                    if diff<bestmatch[0]:
+                    if diff < bestmatch[0]:
                         bestmatch[0] = diff
                         bestmatch[1] = len(ref)
                 # extract the best length match in references
@@ -150,25 +158,25 @@ class BLEUScorer(object):
         # for numerical stability
         p0 = 1e-7
         # brevity penality
-        bp = 1 if c>r else math.exp(1-float(r)/float(c))
+        bp = 1 if c > r else math.exp(1 - float(r) / float(c))
         # modified prec.
-        p_ns = [float(clip_count[i])/float(count[i]+p0)+p0 \
+        p_ns = [float(clip_count[i]) / float(count[i] + p0) + p0 \
                 for i in range(4)]
         # weighted prec.
-        s = math.fsum(w*math.log(p_n) \
-                for w, p_n in zip(weights, p_ns) if p_n)
+        s = math.fsum(w * math.log(p_n) \
+                      for w, p_n in zip(weights, p_ns) if p_n)
         # final bleu score
-        bleu = bp*math.exp(s)
+        bleu = bp * math.exp(s)
         return bleu
 
-    def sentence_bleu_4(self,parallel_corpus):
+    def sentence_bleu_4(self, parallel_corpus):
         # input : single sentence, multiple references
-        count = [0,0,0,0]
-        clip_count = [0,0,0,0]
-        weights=[0.25,0.25,0.25,0.25]
+        count = [0, 0, 0, 0]
+        clip_count = [0, 0, 0, 0]
+        weights = [0.25, 0.25, 0.25, 0.25]
         r = 0
         c = 0
-        
+
         # accumulate ngram statistics
         for hyps, refs in parallel_corpus:
             hyps = [hyp.split() for hyp in hyps]
@@ -178,7 +186,7 @@ class BLEUScorer(object):
                 # for each ngram
                 for i in range(4):
                     # accumulate hyp ngram counts
-                    hypcnts = Counter(ngrams(hyp,i+1))
+                    hypcnts = Counter(ngrams(hyp, i + 1))
                     cnt = sum(hypcnts.values())
                     count[i] += cnt
 
@@ -187,70 +195,70 @@ class BLEUScorer(object):
                     # compare to each reference
                     for ref in refs:
                         # get reference ngrams
-                        refcnts = Counter(ngrams(ref, i+1))
+                        refcnts = Counter(ngrams(ref, i + 1))
                         # for each ngram
                         for ng in hypcnts:
                             # clipped counts
-                            max_counts[ng] = max( max_counts.get(ng,0),refcnts[ng] )
+                            max_counts[ng] = max(max_counts.get(ng, 0), refcnts[ng])
                     # compute clipped counts by clipping the hyp count if necessary
-                    clipcnt = dict( (ng,min(count,max_counts[ng])) \
-                            for ng,count in hypcnts.items() )
+                    clipcnt = dict((ng, min(count, max_counts[ng])) \
+                                   for ng, count in hypcnts.items())
                     clip_count[i] += sum(clipcnt.values())
 
                 # accumulate r & c, find best match among all references
-                bestmatch = [1000,1000]
+                bestmatch = [1000, 1000]
                 for ref in refs:
-                    if bestmatch[0]==0: break
+                    if bestmatch[0] == 0: break
                     # length difference
-                    diff = abs(len(ref)-len(hyp))
+                    diff = abs(len(ref) - len(hyp))
                     # if the current diff less than stored one, change it
-                    if diff<bestmatch[0]:
+                    if diff < bestmatch[0]:
                         bestmatch[0] = diff
                         bestmatch[1] = len(ref)
                 # extract the best length match in references
                 r += bestmatch[1]
                 c += len(hyp)
-        
+
         # for numerical stability
         p0 = 1e-7
         # modified brevity penality
-        bp = math.exp(-abs(1.0-float(r)/float(c+p0)))
+        bp = math.exp(-abs(1.0 - float(r) / float(c + p0)))
         # smoothed version of modified prec.
-        p_ns = [0,0,0,0]
+        p_ns = [0, 0, 0, 0]
         for i in range(4):
-            if i<2: # original version n-gram counts
-                p_ns[i] = float(clip_count[i])/float(count[i]+p0)+p0
-            else: # smoothed version of ngram counts
-                smooth_term = 5*p_ns[i-1]*p_ns[i-1]/p_ns[i-2]
-                p_ns[i] = float(clip_count[i]+smooth_term)/float(count[i]+5)+p0
+            if i < 2:  # original version n-gram counts
+                p_ns[i] = float(clip_count[i]) / float(count[i] + p0) + p0
+            else:  # smoothed version of ngram counts
+                smooth_term = 5 * p_ns[i - 1] * p_ns[i - 1] / p_ns[i - 2]
+                p_ns[i] = float(clip_count[i] + smooth_term) / float(count[i] + 5) + p0
         # weighted prec.
-        s = math.fsum(w*math.log(p_n) for w, p_n in zip(weights, p_ns) if p_n)
+        s = math.fsum(w * math.log(p_n) for w, p_n in zip(weights, p_ns) if p_n)
         # final sentence bleu score
-        bleu_hyp = bp*math.exp(s)
+        bleu_hyp = bp * math.exp(s)
         return bleu_hyp
 
 
 class GentScorer(object):
-    ## main Scorer interfaces for all scorers
-    ## it can do 
-    ## 1. Compute bleu score
-    ## 2. Compute slot error rate
-    ## 3. Detailed illustraction of how differet split 
-    ##    of data affect performance
-    def __init__(self,detectfile):
-        self.errscorer = ERRScorer(detectfile)
-        self.bleuscorer= BLEUScorer()
+    """
+    Scorer to collect all scorers.
+
+    Can:
+    1. Compute BLEU score.
+    2. Compute slot error rate.
+    3. Detailed illustration of how different split of data affect performance.
+    """
+    def __init__(self, detect_file):
+        self.err_scorer = ERRScorer(detect_file)
+        self.bleu_scorer = BLEUScorer()
 
     def score_error(self, a, feat, gen):
-        return self.errscorer.score(a,feat,gen)
-        
-    def countSlots(self,dataset,reader):
-        return self.errscorer.countSlots(dataset,reader)
+        return self.err_scorer.score(a, feat, gen)
+
+    def countSlots(self, dataset, reader):
+        return self.err_scorer.count_slots(dataset, reader)
 
     def score_bleu(self, parallel_corpus):
-        return self.bleuscorer.score(parallel_corpus)
+        return self.bleu_scorer.score(parallel_corpus)
 
     def score_sbleu(self, parallel_corpus):
-        return self.bleuscorer.sentence_bleu_4(parallel_corpus)
-
-
+        return self.bleu_scorer.sentence_bleu_4(parallel_corpus)
