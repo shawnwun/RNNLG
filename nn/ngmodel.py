@@ -12,7 +12,7 @@ try:
 except ImportError:
 
     from queue import PriorityQueue
-from basic import *
+from .basic import *
 
 class NGModel(object):
 

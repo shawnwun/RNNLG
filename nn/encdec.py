@@ -13,7 +13,7 @@ except ImportError:
 import numpy as np
 import operator
 import theano.tensor as T
-from basic import *
+from .basic import *
 from future.utils import iteritems
 from utils.mathUtil import softmax, sigmoid, tanh
 

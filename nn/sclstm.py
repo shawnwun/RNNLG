@@ -15,7 +15,7 @@ except ImportError:
     from queue import PriorityQueue
 from utils.mathUtil import softmax, sigmoid, tanh
 
-from basic  import *
+from .basic  import *
 
 class sclstm(BaseRLG):
 

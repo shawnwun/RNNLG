@@ -10,6 +10,7 @@ from future.utils import iteritems
 from collections import Counter
 from nltk.util import ngrams
 
+file = open
 
 class ERRScorer():
 

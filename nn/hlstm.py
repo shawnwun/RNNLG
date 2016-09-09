@@ -16,7 +16,7 @@ except ImportError:
 from utils.mathUtil import softmax, sigmoid, tanh
 from copy import deepcopy
 
-from basic  import *
+from .basic  import *
 
 class hlstm(BaseRLG):
 

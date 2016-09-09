@@ -8,6 +8,8 @@ from __future__ import print_function
 import json
 from future.utils import iteritems
 
+file = open
+
 class DialogActParser(object):
 
     ## Assumption for the parser :
@@ -40,7 +42,7 @@ class DialogActParser(object):
                 for key, vals in iteritems(self.special_values):
                     if v in vals: # unify the special values
                         v = key
-                if  not self.special_values.has_key(v) and\
+                if  not v in self.special_values and\
                     not keepValues: # delexicalisation
                     v = '_'
                 jsact['s2v'].append((s,v))
@@ -79,7 +81,7 @@ class SoftDActFormatter(DActFormatter):
             elif v=='?': # question case
                 feature.append((s,v))
             elif v=='_': # categories
-                if mem.has_key(s): # multiple feature values
+                if s in mem: # multiple feature values
                     feature.append((s,v+str(mem[s])))
                     mem[s] += 1
                 else: # first occurance
@@ -119,7 +121,7 @@ class HardDActFormatter(DActFormatter):
                 elif v=='?': # question case
                     feature.append('SV-'+s+'=PENDING')
                 elif v=='_': # categories
-                    if mem.has_key(s): # multiple feature values
+                    if s in mem: # multiple feature values
                         feature.append('SV-'+s+'=VALUE'+str(mem[s]))
                         mem[s] += 1
                     else: # first occurance

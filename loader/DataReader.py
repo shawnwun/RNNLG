@@ -12,7 +12,9 @@ from future.utils import iteritems
 
 from .FeatParser import *
 from .DataLexicaliser import *
+from utils.nlp import *
 
+file = open
 
 class DataReader(object):
     def __init__(self, seed, domain, obj, 
@@ -223,7 +225,7 @@ class DataReader(object):
             # grouping data points according to unique DAs
             a2ref = {}
             for feat,dact,sent,base in container:
-                if a2ref.has_key(tuple(feat)):
+                if tuple(feat) in a2ref:
                     a2ref[ tuple(feat)][0].append(dact)
                     a2ref[ tuple(feat)][1].append(sent)
                     a2ref[ tuple(feat)][2].append(base)
