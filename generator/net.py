@@ -12,7 +12,7 @@ from math import log10
 
 from loader.data_reader import *
 from loader.generation_scorer import *
-from nn.NNGenerator import *
+from nn.nn_generator import *
 
 try:
 
@@ -151,7 +151,7 @@ class Model(object):
             self.model.set_word_vec(self.reader.read_vec_file(
                 self.wvecfile, self.reader.vocab))
         if self.debug:
-            print('\t\tnumber of parameters : %8d' % self.model.numOfParams())
+            print('\t\tnumber of parameters : %8d' % self.model.num_params())
             print('\tthis may take up to several minutes ...')
 
     #################################################################
@@ -500,11 +500,11 @@ class Model(object):
     #################################################################
     def update_theano_params(self):
         # update theano from np
-        self.model.setParams(self.params_np)
+        self.model.set_params(self.params_np)
 
     def update_numpy_params(self):
         # update np from theano
-        self.params_np = self.model.getParams()
+        self.params_np = self.model.get_params()
 
     def save_net(self):
         if self.debug:
