@@ -3,7 +3,11 @@
 #  Copyright Tsung-Hsien Wen, Cambridge Dialogue Systems Group, 2016 #
 ######################################################################
 ######################################################################
-from builtins import input as raw_input
+try:
+    from builtins import input as raw_input
+except ImportError:
+    # Python2 has no 'builtins' module, but raw_input is already available there
+    pass
 
 import numpy as np
 import random
