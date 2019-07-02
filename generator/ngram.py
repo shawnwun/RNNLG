@@ -67,7 +67,7 @@ class Ngram(object):
                     self.reader.readall(mode='valid')
         for a,sv,s,v,sents,dact,base in templates:
             key = (tuple(a),tuple(sv))
-            if da2sents.has_key(key):
+            if key in da2sents:
                 da2sents[key].extend(sents)
                 da2sents[key] = list(set(da2sents[key]))
             else:
@@ -77,7 +77,7 @@ class Ngram(object):
         for key,sents in iteritems(da2sents):
             a,sv = key
             identifier = (a,sv[:self.rho]) if len(sv)>self.rho else (a,sv)
-            if cls2texts.has_key(identifier):
+            if identifier in cls2texts:
                 cls2texts[identifier].extend(sents)
             else:
                 cls2texts[identifier] = sents
