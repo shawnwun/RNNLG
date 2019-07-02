@@ -9,10 +9,10 @@ import theano.tensor as T
 import theano.gradient as G
 from collections import OrderedDict
 
-from basic  import *
-from hlstm  import *
-from sclstm import *
-from encdec import *
+from .basic  import *
+from .hlstm  import *
+from .sclstm import *
+from .encdec import *
 
 class NNGenerator(object):
 

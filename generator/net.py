@@ -3,27 +3,25 @@
 #  Copyright Tsung-Hsien Wen, Cambridge Dialogue Systems Group, 2016 #
 ######################################################################
 ######################################################################
-import theano
-import numpy as np
+from __future__ import print_function
+
 import os
 import operator
 from math import log, log10, exp, pow
-import sys
-import random
 import time
-import itertools
 import pickle as pk
-from ast import literal_eval
-
-from theano import tensor as T
-from collections import OrderedDict
 
 from nn.NNGenerator import *
 
 from loader.DataReader import *
 from loader.GentScorer import *
 
-from ConfigParser import SafeConfigParser
+try:
+
+    from ConfigParser import SafeConfigParser
+except ImportError:
+
+    from configparser import SafeConfigParser
 
 # theano debugging flags
 """
@@ -57,7 +55,7 @@ class Model(object):
     def __init__(self,config=None,opts=None):
         # not enough info to execute
         if config==None and opts==None:
-            print "Please specify command option or config file ..."
+            print("Please specify command option or config file ...")
             return
         # config parser
         parser = SafeConfigParser()
@@ -75,7 +73,7 @@ class Model(object):
 
     def initNet(self,config,opts=None):
         
-        print '\n\ninit net from scrach ... '
+        print('\n\ninit net from scrach ... ')
 
         # config parser
         parser = SafeConfigParser()
@@ -84,7 +82,7 @@ class Model(object):
         # setting learning hyperparameters 
         self.debug = parser.getboolean('learn','debug')
         if self.debug:
-            print 'loading settings from config file ...'
+            print('loading settings from config file ...')
         self.seed       = parser.getint(  'learn','random_seed')
         self.lr_divide  = parser.getint(  'learn','lr_divide')
         self.lr         = parser.getfloat('learn','lr')
@@ -99,7 +97,7 @@ class Model(object):
         self.batch      = parser.getint('train_mode','batch')
         # setting file paths
         if self.debug:
-            print 'loading file path from config file ...'
+            print('loading file path from config file ...')
         self.wvecfile   = parser.get('data','wvec')
         self.trainfile  = parser.get('data','train')
         self.validfile  = parser.get('data','valid') 
@@ -136,13 +134,12 @@ class Model(object):
     #################### Model Initialisation #######################
     #################################################################
         if self.debug:
-            print 'setting network structures using theano variables ...'
+            print('setting network structures using theano variables ...')
         ###########################################################
         ############## Setting Recurrent Generator ################
         ###########################################################
         if self.debug:
-            print '\tsetting recurrent generator, type: %s ...' % \
-                    self.gentype
+            print('\tsetting recurrent generator, type: %s ...' % self.gentype)
         self.model = NNGenerator(self.gentype, self.reader.vocab,
                 self.beamwidth, self.overgen,
                 self.di, self.dh, self.batch, self.reader.dfs, 
@@ -153,9 +150,8 @@ class Model(object):
             self.model.setWordVec(self.reader.readVecFile(
                 self.wvecfile,self.reader.vocab))
         if self.debug:
-            print '\t\tnumber of parameters : %8d' % \
-                    self.model.numOfParams()
-            print '\tthis may take up to several minutes ...'
+            print('\t\tnumber of parameters : %8d' % self.model.numOfParams())
+            print('\tthis may take up to several minutes ...')
 
     #################################################################
     ####################### Training ################################
@@ -169,7 +165,7 @@ class Model(object):
     def trainNetML(self): 
         ######## training RNN generator with early stopping ######### 
         if self.debug:
-            print 'start network training ...'
+            print('start network training ...')
         epoch = 0
         lr_divide = 0
         llr_divide= -1
@@ -196,14 +192,13 @@ class Model(object):
                 num_sent+=cutoff_b
                 # log message 
                 if self.debug and num_sent%100==0:
-                    print 'Finishing %8d sent in epoch %3d\r' % \
-                            (num_sent,epoch),
+                    print('Finishing %8d sent in epoch %3d\r' % (num_sent,epoch), end="")
                     sys.stdout.flush()
             # log message
             sec = (time.time()-tic)/60.0
             if self.debug:
-                print 'Epoch %3d, Alpha %.6f, TRAIN entropy:%.2f, Time:%.2f mins,' %\
-                        (epoch, self.lr, -train_logp/log10(2)/wcn, sec),
+                print('Epoch %3d, Alpha %.6f, TRAIN entropy:%.2f, Time:%.2f mins,' %\
+                        (epoch, self.lr, -train_logp/log10(2)/wcn, sec), end="")
                 sys.stdout.flush()
 
             # validation phase
@@ -221,7 +216,7 @@ class Model(object):
                 wcn += np.sum(cutoff_f-1)
             # log message
             if self.debug:
-                print 'VALID entropy:%.2f'%-(self.valid_logp/log10(2)/wcn)
+                print('VALID entropy:%.2f'%-(self.valid_logp/log10(2)/wcn))
 
             # decide to throw/keep weights
             if self.valid_logp < self.llogp:
@@ -239,7 +234,7 @@ class Model(object):
                     lr_divide += 1
                 else:
                     self.saveNet()
-                    print 'Training completed.'
+                    print('Training completed.')
                     break
             # set last epoch objective value
             self.llogp = self.valid_logp
@@ -248,7 +243,7 @@ class Model(object):
     def trainNetDT(self):
         # start 
         if self.debug:
-            print 'start network training with expected objective ...'
+            print('start network training with expected objective ...')
         
         # examples
         train_examples = self.reader.readall(mode='train')
@@ -327,12 +322,12 @@ class Model(object):
                 train_obj += xObj
                 num_sent+=1
                 if self.debug and num_sent%1==0:
-                    print 'Finishing %8d sent in epoch %3d\r' % \
-                            (num_sent,epoch),
+                    print('Finishing %8d sent in epoch %3d\r' % \
+                            (num_sent,epoch), end="")
                     sys.stdout.flush()
             sec = (time.time()-tic)/60.0
             if self.debug:
-                print 'Epoch %2d, Alpha %.4f, TRAIN Obj:%.4f, Expected BLEU:%.4f, Expected ERR:%.4f, Time:%.2f mins,' % (epoch, self.lr, train_obj/float(num_sent), train_bleu/float(num_sent), train_err/float(num_sent), sec),
+                print('Epoch %2d, Alpha %.4f, TRAIN Obj:%.4f, Expected BLEU:%.4f, Expected ERR:%.4f, Time:%.2f mins,' % (epoch, self.lr, train_obj/float(num_sent), train_bleu/float(num_sent), train_err/float(num_sent), sec), end="")
                 sys.stdout.flush()
 
             # validation phase
@@ -389,7 +384,7 @@ class Model(object):
                 num_sent +=1
 
             if self.debug:
-                print 'VALID Obj:%.3f'% (self.valid_obj/float(num_sent))
+                print('VALID Obj:%.3f'% (self.valid_obj/float(num_sent)))
             
             # decide to throw/keep weights
             if self.valid_obj > self.lobj: # throw weight
@@ -403,7 +398,7 @@ class Model(object):
                     lr_divide += 1
                 else:
                     self.saveNet()
-                    print 'Training completed.'
+                    print('Training completed.')
                     break
             
             if self.valid_obj < self.lobj:
@@ -419,7 +414,7 @@ class Model(object):
     def testNet(self):
         ######## test RNN generator on test set ######### 
         if self.debug:
-            print 'start network testing ...'
+            print('start network testing ...')
         self.model.loadConverseParams()
         
         # container
@@ -455,9 +450,9 @@ class Model(object):
                 gens[i] = (penalty,self.reader.lexicalise(gen,dact))
             # get the top-k for evaluation
             gens = sorted(gens,key=operator.itemgetter(0))[:self.topk]
-            # print results
-            print dact
-            print 'Penalty\tTSER\tASER\tGen'
+            # print(results)
+            print(dact)
+            print('Penalty\tTSER\tASER\tGen')
             for penalty, gen in gens:
                 # score slot error rate
                 cnt, total, caty = self.gentscorer.scoreERR(a,felements,
@@ -466,8 +461,8 @@ class Model(object):
                 gencnts[0]  += cnt
                 gencnts[1]  += total
                 gencnts[2]  += caty
-                print '%.4f\t%d\t%d\t%s' % (penalty,total,caty,gen)
-            print '\n'
+                print('%.4f\t%d\t%d\t%s' % (penalty,total,caty,gen))
+            print('\n')
             
             # compute gold standard slot error rate
             for sent in sents:
@@ -485,16 +480,16 @@ class Model(object):
 
         bleuModel   = self.gentscorer.scoreBLEU(parallel_corpus)
         bleuHDC     = self.gentscorer.scoreBLEU(hdc_corpus)
-        print '##############################################'
-        print 'BLEU SCORE & SLOT ERROR on GENERATED SENTENCES'
-        print '##############################################'
-        print 'Metric       :\tBLEU\tT.ERR\tA.ERR'
-        print 'HDC          :\t%.4f\t%2.2f%%\t%2.2f%%'% (bleuHDC,0.0,0.0)
-        print 'Ref          :\t%.4f\t%2.2f%%\t%2.2f%%'% (1.0,
-                100*refcnts[1]/refcnts[0],100*refcnts[2]/refcnts[0])
-        print '----------------------------------------------'
-        print 'This Model   :\t%.4f\t%2.2f%%\t%2.2f%%'% (bleuModel,
-                100*gencnts[1]/gencnts[0],100*gencnts[2]/gencnts[0])
+        print('##############################################')
+        print('BLEU SCORE & SLOT ERROR on GENERATED SENTENCES')
+        print('##############################################')
+        print('Metric       :\tBLEU\tT.ERR\tA.ERR')
+        print('HDC          :\t%.4f\t%2.2f%%\t%2.2f%%'% (bleuHDC,0.0,0.0))
+        print('Ref          :\t%.4f\t%2.2f%%\t%2.2f%%'% (1.0,
+                100*refcnts[1]/refcnts[0],100*refcnts[2]/refcnts[0]))
+        print('----------------------------------------------')
+        print('This Model   :\t%.4f\t%2.2f%%\t%2.2f%%'% (bleuModel,
+                100*gencnts[1]/gencnts[0],100*gencnts[2]/gencnts[0]))
     
         
     #################################################################
@@ -510,21 +505,22 @@ class Model(object):
         
     def saveNet(self):
         if self.debug:
-            print 'saving net to file ... '
+            print('saving net to file ... ')
         self.updateNumpyParams()
+        locals_ = locals()
         bundle={
-            'learn' :dict( [(name,eval(name)) for name in self.learn_vars]  ),
-            'data'  :dict( [(name,eval(name)) for name in self.data_vars]   ),
-            'gen'   :dict( [(name,eval(name)) for name in self.gen_vars]    ),
-            'model' :dict( [(name,eval(name)) for name in self.model_vars]  ),
-            'mode'  :dict( [(name,eval(name)) for name in self.mode_vars]   ),
-            'params':dict( [(name,eval(name)) for name in self.params_vars] )
+            'learn' :dict( [(name,eval(name, globals(), locals_)) for name in self.learn_vars]  ),
+            'data'  :dict( [(name,eval(name, globals(), locals_)) for name in self.data_vars]   ),
+            'gen'   :dict( [(name,eval(name, globals(), locals_)) for name in self.gen_vars]    ),
+            'model' :dict( [(name,eval(name, globals(), locals_)) for name in self.model_vars]  ),
+            'mode'  :dict( [(name,eval(name, globals(), locals_)) for name in self.mode_vars]   ),
+            'params':dict( [(name,eval(name, globals(), locals_)) for name in self.params_vars] )
         }
         pk.dump(bundle, open(self.modelfile, 'wb'))
 
     def loadNet(self,parser,mode):
 
-        print '\n\nloading net from file %s ... ' % self.modelfile
+        print('\n\nloading net from file %s ... ' % self.modelfile)
         bundle = pk.load(open(self.modelfile, 'rb'))
         # load learning variables from model
         # if adaptation, load from config file

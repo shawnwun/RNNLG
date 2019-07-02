@@ -3,27 +3,29 @@
 #  Copyright Tsung-Hsien Wen, Cambridge Dialogue Systems Group, 2016 #
 ######################################################################
 ######################################################################
-import numpy as np
-import os
-import operator
+from __future__ import print_function
 from math import sqrt
-import random
-from ast import literal_eval
-from copy import deepcopy
 
 from loader.DataReader import *
 from loader.GentScorer import *
 
 from nn.ngmodel import *
 
-from ConfigParser import SafeConfigParser
+from future.utils import iteritems
+
+try:
+
+    from ConfigParser import SafeConfigParser
+except ImportError:
+
+    from configparser import SafeConfigParser
 
 class Ngram(object):
 
     def __init__(self,config=None,opts=None):
         # not enough info to execute
         if config==None and opts==None:
-            print "Please specify command option or config file ..."
+            print("Please specify command option or config file ...")
             return
         # config parser
         parser = SafeConfigParser()
@@ -59,30 +61,30 @@ class Ngram(object):
 
         ######## train ngram generator by grouping ########
         if self.debug:
-            print 'start ngram training ...'
+            print('start ngram training ...')
         da2sents = {}
         templates = self.reader.readall(mode='train')+\
                     self.reader.readall(mode='valid')
         for a,sv,s,v,sents,dact,base in templates:
             key = (tuple(a),tuple(sv))
-            if da2sents.has_key(key):
+            if key in da2sents:
                 da2sents[key].extend(sents)
                 da2sents[key] = list(set(da2sents[key]))
             else:
                 da2sents[key] = sents
         # accumulate texts for training class-based LM
         cls2texts = {}
-        for key,sents in da2sents.iteritems():
+        for key,sents in iteritems(da2sents):
             a,sv = key
             identifier = (a,sv[:self.rho]) if len(sv)>self.rho else (a,sv)
-            if cls2texts.has_key(identifier):
+            if identifier in cls2texts:
                 cls2texts[identifier].extend(sents)
             else:
                 cls2texts[identifier] = sents
         
         # train class based ngram models
         cls2model = {}
-        for key, sents in cls2texts.iteritems():
+        for key, sents in iteritems(cls2texts):
             model = NGModel(self.reader.vocab,self.topk,self.overgen,
                     self.beamwidth,n=self.N,rho=self.rho)
             model.train(sents)
@@ -90,7 +92,7 @@ class Ngram(object):
 
         ######## test ngram generator on test set ######### 
         if self.debug:
-            print 'start ngram generation ...'
+            print('start ngram generation ...')
         
         # container
         parallel_corpus, hdc_corpus = [], []
@@ -108,7 +110,7 @@ class Ngram(object):
             sents,dact,bases = sents[0],dact[0],bases[0]
             # score DA similarity between testing example and class LMs
             model_ranks = []
-            for da_t,model in cls2model.iteritems():
+            for da_t, model in iteritems(cls2model):
                 a_t,sv_t = [set(x) for x in da_t]
                 # cosine similarity
                 score =float(len(a_t.intersection(set(a)))+\
@@ -140,9 +142,9 @@ class Ngram(object):
                 gens[i] = (penalty,self.reader.lexicalise(gen,dact))
             # get the top-k for evaluation
             gens = sorted(gens,key=operator.itemgetter(0))[:self.topk]
-            # print results
-            print dact
-            print 'Penalty\tTSER\tASER\tGen'
+            # print(results)
+            print(dact)
+            print('Penalty\tTSER\tASER\tGen')
             for penalty, gen in gens:
                 # score slot error rate
                 cnt, total, caty = self.gentscorer.scoreERR(a,felements,
@@ -151,8 +153,8 @@ class Ngram(object):
                 gencnts[0]  += cnt
                 gencnts[1]  += total
                 gencnts[2]  += caty
-                print '%.4f\t%d\t%d\t%s' % (penalty,total,caty,gen)
-            print '\n'
+                print('%.4f\t%d\t%d\t%s' % (penalty,total,caty,gen))
+            print('\n')
             # compute gold standard slot error rate
             for sent in sents:
                 # score slot error rate
@@ -168,16 +170,16 @@ class Ngram(object):
 
         bleuModel   = self.gentscorer.scoreBLEU(parallel_corpus)
         bleuHDC     = self.gentscorer.scoreBLEU(hdc_corpus)
-        print '##############################################'
-        print 'BLEU SCORE & SLOT ERROR on GENERATED SENTENCES'
-        print '##############################################'
-        print 'Metric       :\tBLEU\tT.ERR\tA.ERR'
-        print 'HDC          :\t%.4f\t%2.2f%%\t%2.2f%%'% (bleuHDC,0.0,0.0)
-        print 'Ref          :\t%.4f\t%2.2f%%\t%2.2f%%'% (1.0,
-                100*refcnts[1]/refcnts[0],100*refcnts[2]/refcnts[0])
-        print '----------------------------------------------'
-        print 'This Model   :\t%.4f\t%2.2f%%\t%2.2f%%'% (bleuModel,
-                100*gencnts[1]/gencnts[0],100*gencnts[2]/gencnts[0])
+        print('##############################################')
+        print('BLEU SCORE & SLOT ERROR on GENERATED SENTENCES')
+        print('##############################################')
+        print('Metric       :\tBLEU\tT.ERR\tA.ERR')
+        print('HDC          :\t%.4f\t%2.2f%%\t%2.2f%%'% (bleuHDC,0.0,0.0))
+        print('Ref          :\t%.4f\t%2.2f%%\t%2.2f%%'% (1.0,
+                100*refcnts[1]/refcnts[0],100*refcnts[2]/refcnts[0]))
+        print('----------------------------------------------')
+        print('This Model   :\t%.4f\t%2.2f%%\t%2.2f%%'% (bleuModel,
+                100*gencnts[1]/gencnts[0],100*gencnts[2]/gencnts[0]))
 
     def setupSideOperators(self):
         # initialise data reader

@@ -3,9 +3,12 @@
 #  Copyright Tsung-Hsien Wen, Cambridge Dialogue Systems Group, 2016 #
 ######################################################################
 ######################################################################
-import sys
-import os
+from __future__ import print_function
+
 import json
+from future.utils import iteritems
+
+file = open
 
 class DialogActParser(object):
 
@@ -36,10 +39,10 @@ class DialogActParser(object):
             else: # both slot and value exist 
                 s,v = [x.strip('\'\"') for x in slt2val.split('=')]
                 s = s.replace('_','').replace(' ','')
-                for key,vals in self.special_values.iteritems():
+                for key, vals in iteritems(self.special_values):
                     if v in vals: # unify the special values
                         v = key
-                if  not self.special_values.has_key(v) and\
+                if  not v in self.special_values and\
                     not keepValues: # delexicalisation
                     v = '_'
                 jsact['s2v'].append((s,v))
@@ -78,7 +81,7 @@ class SoftDActFormatter(DActFormatter):
             elif v=='?': # question case
                 feature.append((s,v))
             elif v=='_': # categories
-                if mem.has_key(s): # multiple feature values
+                if s in mem: # multiple feature values
                     feature.append((s,v+str(mem[s])))
                     mem[s] += 1
                 else: # first occurance
@@ -118,7 +121,7 @@ class HardDActFormatter(DActFormatter):
                 elif v=='?': # question case
                     feature.append('SV-'+s+'=PENDING')
                 elif v=='_': # categories
-                    if mem.has_key(s): # multiple feature values
+                    if s in mem: # multiple feature values
                         feature.append('SV-'+s+'=VALUE'+str(mem[s]))
                         mem[s] += 1
                     else: # first occurance
@@ -136,13 +139,13 @@ if __name__ == '__main__':
     #dadp = DialogActDelexicalizedParser()
     dadp = HardDActFormatter()
 
-    print dadp.format("inform(type='restaurant';count='182';area=dont_care)")
-    print dadp.format("reqmore()")
-    print dadp.format("request(area)")
-    print dadp.format("inform(name='fifth floor';address='hotel palomar 12 fourth street or rosie street')")
-    print dadp.format("inform(name='fifth floor';address='hotel palomar 12 fourth street and rosie street')")
-    print dadp.format("?select(food=dont_care;food='sea food')")
-    print dadp.format("?select(food='yes';food='no')")
-    print dadp.format("?select(battery rating=exceptional;battery rating=standard)")
-    print dadp.format("suggest(weight range=heavy;weight range=light weight;weightrange=dontcare)")
-    print dadp.format("?compare(name=satellite morpheus 36;warranty=1 year european;dimension=33.7 inch;name=tecra proteus 23;warranty=1 year international;dimension=27.4 inch)")
+    print(dadp.format("inform(type='restaurant';count='182';area=dont_care)"))
+    print(dadp.format("reqmore()"))
+    print(dadp.format("request(area)"))
+    print(dadp.format("inform(name='fifth floor';address='hotel palomar 12 fourth street or rosie street')"))
+    print(dadp.format("inform(name='fifth floor';address='hotel palomar 12 fourth street and rosie street')"))
+    print(dadp.format("?select(food=dont_care;food='sea food')"))
+    print(dadp.format("?select(food='yes';food='no')"))
+    print(dadp.format("?select(battery rating=exceptional;battery rating=standard)"))
+    print(dadp.format("suggest(weight range=heavy;weight range=light weight;weightrange=dontcare)"))
+    print(dadp.format("?compare(name=satellite morpheus 36;warranty=1 year european;dimension=33.7 inch;name=tecra proteus 23;warranty=1 year international;dimension=27.4 inch)"))

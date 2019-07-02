@@ -3,25 +3,28 @@
 #  Copyright Tsung-Hsien Wen, Cambridge Dialogue Systems Group, 2016 #
 ######################################################################
 ######################################################################
-import numpy as np
-import os
+from __future__ import print_function
 import operator
 from math import sqrt
-import random
-from ast import literal_eval
 from copy import deepcopy
 
+from future.utils import iteritems
 from loader.DataReader import *
 from loader.GentScorer import *
 
-from ConfigParser import SafeConfigParser
+try:
+
+    from ConfigParser import SafeConfigParser
+except ImportError:
+
+    from configparser import SafeConfigParser
 
 class KNN(object):
 
     def __init__(self,config=None,opts=None):
         # not enough info to execute
         if config==None and opts==None:
-            print "Please specify command option or config file ..."
+            print("Please specify command option or config file ...")
             return
         # config parser
         parser = SafeConfigParser()
@@ -63,7 +66,7 @@ class KNN(object):
 
         ######## test KNN generator on test set ######### 
         if self.debug:
-            print 'start KNN generation ...'
+            print('start KNN generation ...')
         
         # container
         parallel_corpus, hdc_corpus = [], []
@@ -81,7 +84,7 @@ class KNN(object):
             sents,dact,bases = sents[0],dact[0],bases[0]
             # score DA similarity between testing example and train+valid set
             template_ranks = []
-            for da_t,sents_t in da2sents.iteritems():
+            for da_t, sents_t in iteritems(da2sents):
                 a_t,sv_t = [set(x) for x in da_t]
                 score =float(len(a_t.intersection(set(a)))+\
                         len(sv_t.intersection(set(sv))))/\
@@ -96,9 +99,9 @@ class KNN(object):
             # for slot error rate scoring
             felements = [self.reader.cardinality[x+self.reader.dfs[1]]\
                     for x in sv]
-            # print results
-            print dact
-            print 'Sim\tTSER\tASER\tGen'
+            # print(results)
+            print(dact)
+            print('Sim\tTSER\tASER\tGen')
             for i in range(len(gens)):
                 # score slot error rate
                 cnt, total, caty = self.gentscorer.scoreERR(a,felements,
@@ -108,8 +111,8 @@ class KNN(object):
                 gencnts[0]  += cnt
                 gencnts[1]  += total
                 gencnts[2]  += caty
-                print '%.4f\t%d\t%d\t%s' % (score,total,caty,gens[i])
-            print '\n'
+                print('%.4f\t%d\t%d\t%s' % (score,total,caty,gens[i]))
+            print('\n')
             
             # compute gold standard slot error rate
             for sent in sents:
@@ -127,16 +130,16 @@ class KNN(object):
 
         bleuModel   = self.gentscorer.scoreBLEU(parallel_corpus)
         bleuHDC     = self.gentscorer.scoreBLEU(hdc_corpus)
-        print '##############################################'
-        print 'BLEU SCORE & SLOT ERROR on GENERATED SENTENCES'
-        print '##############################################'
-        print 'Metric       :\tBLEU\tT.ERR\tA.ERR'
-        print 'HDC          :\t%.4f\t%2.2f%%\t%2.2f%%'% (bleuHDC,0.0,0.0)
-        print 'Ref          :\t%.4f\t%2.2f%%\t%2.2f%%'% (1.0,
-                100*refcnts[1]/refcnts[0],100*refcnts[2]/refcnts[0])
-        print '----------------------------------------------'
-        print 'This Model   :\t%.4f\t%2.2f%%\t%2.2f%%'% (bleuModel,
-                100*gencnts[1]/gencnts[0],100*gencnts[2]/gencnts[0])
+        print('##############################################')
+        print('BLEU SCORE & SLOT ERROR on GENERATED SENTENCES')
+        print('##############################################')
+        print('Metric       :\tBLEU\tT.ERR\tA.ERR')
+        print('HDC          :\t%.4f\t%2.2f%%\t%2.2f%%'% (bleuHDC,0.0,0.0))
+        print('Ref          :\t%.4f\t%2.2f%%\t%2.2f%%'% (1.0,
+                100*refcnts[1]/refcnts[0],100*refcnts[2]/refcnts[0]))
+        print('----------------------------------------------')
+        print('This Model   :\t%.4f\t%2.2f%%\t%2.2f%%'% (bleuModel,
+                100*gencnts[1]/gencnts[0],100*gencnts[2]/gencnts[0]))
 
     def setupSideOperators(self):
         # initialise data reader
